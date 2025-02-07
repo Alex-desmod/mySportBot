@@ -27,6 +27,12 @@ async def back(callback: CallbackQuery):
     await callback.message.answer('Вот что у меня в меню. Выбирай, если интересно.', reply_markup=await kb.start())
 
 
+@router.message()
+async def catch_all_messages(message: Message):
+    await message.answer("Сорри, я тупой бот и не умею отвечать на сообщения. Пожалуйста, выбери что-нибудь из меню",
+                         reply_markup=await kb.start())
+
+
 
 
 
