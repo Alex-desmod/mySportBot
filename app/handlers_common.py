@@ -1,5 +1,5 @@
 from aiogram import Router, F
-from aiogram.filters import CommandStart
+from aiogram.filters import CommandStart, Command
 from aiogram.types import Message, CallbackQuery
 
 import app.keyboards as kb
@@ -8,7 +8,7 @@ import app.handlers_cycling as hc
 import app.handlers_athletics as ha
 import app.db.requests as rq
 
-router = Router()
+router = Router(name=__name__)
 router.include_routers(hb.router, hc.router, ha.router)
 
 @router.message(CommandStart())
@@ -21,7 +21,13 @@ async def cmd_start(message: Message):
                          f'разработчика. Может быть попозже он додумается до чего-то еще 😉',
                          reply_markup= await kb.start())
 
-@router.callback_query(F.data.startswith("BACK"))
+
+@router.message(Command('basket'))
+async def basket(message: Message):
+    await message.answer('Выбери турнир', reply_markup= await kb.basket())
+
+
+@router.callback_query(F.data == "back")
 async def back(callback: CallbackQuery):
     await callback.answer()
     await callback.message.answer('Вот что у меня в меню. Выбирай, если интересно.', reply_markup=await kb.start())

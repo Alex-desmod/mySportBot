@@ -5,9 +5,9 @@ from datetime import datetime, timezone, timedelta
 from app import keyboards as kb
 import app.basket_data as bdata
 
-router = Router()
+router = Router(name=__name__)
 
-@router.callback_query(F.data.startswith("BASKET"))
+@router.callback_query(F.data == "BASKET")
 async def basket(callback: CallbackQuery):
     await callback.answer()
     await callback.message.answer('Выбери турнир', reply_markup= await kb.basket())
@@ -52,9 +52,9 @@ async def past_euro_games(callback: CallbackQuery):
         local_score = game["local"]["score"]
         road_score = game["road"]["score"]
         game_date = game["date"][:10]
-        results.append(f"{game_date} | {local_team:<20} {local_score:>3} - {road_score:<3} {road_team:>20}")
+        results.append(f"{game_date} | <b>{local_team}</b> - <b>{road_team:<15}</b> {local_score:>3}:{road_score:<3}")
 
-    output = f'Матчи последнего тура ({latest_round}):\n' + "\n".join(results)
+    output = f'Матчи последнего тура ({latest_round}):\n\n' + "\n\n".join(results)
     await callback.message.answer(output, reply_markup= await kb.euro())
 
 
@@ -92,9 +92,9 @@ async def future_euro_games(callback: CallbackQuery):
         game_date = game["date"][:10]
         utc_time = datetime.strptime(game["utcDate"], "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
         moscow_time = utc_time.astimezone(MOSCOW_TZ).strftime("%H:%M")
-        results.append(f"{game_date} {moscow_time} | {local_team:<20} vs {road_team:<20}")
+        results.append(f"{game_date} {moscow_time} | <b>{local_team:<15}</b> vs <b>{road_team:<15}</b>")
 
-    output = f"Предстоящие матчи (время Мск):\n" + "\n".join(results)
+    output = f"Предстоящие матчи (время Мск):\n\n" + "\n\n".join(results)
     await callback.message.answer(output, reply_markup= await kb.euro())
 
 
@@ -120,14 +120,14 @@ async def standings_euro(callback: CallbackQuery):
         await callback.message.answer("Нет данных о турнирной таблице.")
 
     # Formatting the table
-    results = [f"{' ':<15} {'Команда':<35} {'Игры':<25} {'%':<10}\n", f"{"-" * 80}"]
+    results = [f"{' ':<5} {'Команда':<30} {'Игры':<10}%\n", f"{"-" * 33}"]
     for team in standings:
         position = team["data"]["position"]
         name = team["club"]["abbreviatedName"]
         games_played = team["data"]["gamesPlayed"]
         games_won = team["data"]["gamesWon"]
         win_percentage = (games_won / games_played * 100) if games_played else 0
-        results.append(f"{position:<5} {name:<35} {games_played:<20} {win_percentage:.2f}%")
+        results.append(f"{position:<5} {name:<20} {games_played:<5} {win_percentage:.1f}%")
 
     output = "\n".join(results)
     await callback.message.answer(output, reply_markup=await kb.euro())

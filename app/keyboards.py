@@ -21,7 +21,7 @@ async def euro():
     kb = InlineKeyboardBuilder()
     for menu in sports.Euro:
         kb.add(InlineKeyboardButton(text=menu.value, callback_data=menu.name))
-    kb.add(InlineKeyboardButton(text="Главное меню ⬅️", callback_data='BACK'))
+    kb.add(InlineKeyboardButton(text="Главное меню ⬅️", callback_data='back'))
 
     return kb.adjust(1).as_markup()
 
