@@ -45,10 +45,25 @@ async def past_euro_games(callback: CallbackQuery):
         await callback.message.answer("Нет сыгранных матчей.", reply_markup= await kb.euro())
 
     latest_round = max(game["round"] for game in played_games)
-    latest_round_games = [game for game in played_games if game["round"] == latest_round]
+    phase = played_games[0]["phaseType"]["code"]
+
+    if phase == "RS":
+        latest_round_games = [game for game in played_games if game["round"] == latest_round]
+        results = [f'Матчи последнего тура ({latest_round}):\n\n']
+
+    if phase == "PI":
+        latest_round_games = [game for game in played_games if game["phaseType"]["code"] == phase]
+        results = ['Плей-ин:\n\n']
+
+    if phase == "PO":
+        latest_round_games = [game for game in played_games if game["phaseType"]["code"] == phase]
+        results = ['Плей-офф:\n\n']
+
+    if phase == "FF":
+        latest_round_games = [game for game in played_games if game["phaseType"]["code"] == phase]
+        results = ['<b>Final Four!</b>\n\n']
 
     # Formatting the results
-    results = []
     for game in latest_round_games:
         local_team = game["local"]["club"]["abbreviatedName"]
         road_team = game["road"]["club"]["abbreviatedName"]
@@ -57,7 +72,7 @@ async def past_euro_games(callback: CallbackQuery):
         game_date = game["date"][:10]
         results.append(f"{game_date} | <b>{local_team}</b> - <b>{road_team:<15}</b> {local_score:>3}:{road_score:<3}")
 
-    output = f'Матчи последнего тура ({latest_round}):\n\n' + "\n\n".join(results)
+    output = "\n\n".join(results)
     await callback.message.answer(output, reply_markup= await kb.euro())
 
 
