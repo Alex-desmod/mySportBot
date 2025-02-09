@@ -27,6 +27,16 @@ async def basket(message: Message):
     await message.answer('Выбери турнир', reply_markup= await kb.basket())
 
 
+@router.message(Command('cycling'))
+async def cycling(message: Message):
+    await message.answer('В процессе разработки...')
+
+
+@router.message(Command('athletics'))
+async def athletics(message: Message):
+    await message.answer('В процессе разработки...')
+
+
 @router.callback_query(F.data == "back")
 async def back(callback: CallbackQuery):
     await callback.answer()

@@ -34,8 +34,8 @@ async def nba(callback: CallbackQuery):
 async def past_euro_games(callback: CallbackQuery):
     await callback.answer()
 
-    URL_GAMES = bdata.Euro_endpoints().games()
-    data = await bdata.fetch_data(URL_GAMES)
+    url_games = bdata.Euro_endpoints().games()
+    data = await bdata.fetch_data(url_games)
     if data == "No server answer":
         await callback.message.answer("Нет ответа от сервера.", reply_markup= await kb.euro())
 
@@ -80,8 +80,8 @@ async def past_euro_games(callback: CallbackQuery):
 async def future_euro_games(callback: CallbackQuery):
     await callback.answer()
 
-    URL_GAMES = bdata.Euro_endpoints().games()
-    data = await bdata.fetch_data(URL_GAMES)
+    url_games = bdata.Euro_endpoints().games()
+    data = await bdata.fetch_data(url_games)
     if data == "No server answer":
         await callback.message.answer("Нет ответа от сервера.", reply_markup= await kb.euro())
 
@@ -120,8 +120,8 @@ async def future_euro_games(callback: CallbackQuery):
 async def standings_euro(callback: CallbackQuery):
     await callback.answer()
 
-    URL_GAMES = bdata.Euro_endpoints().games()
-    data = await bdata.fetch_data(URL_GAMES)
+    url_games = bdata.Euro_endpoints().games()
+    data = await bdata.fetch_data(url_games)
     if data == "No server answer":
         await callback.message.answer("Нет ответа от сервера.", reply_markup= await kb.euro())
 
@@ -129,9 +129,14 @@ async def standings_euro(callback: CallbackQuery):
     played_games = [game for game in data["data"] if game["played"]]
     latest_round = max(game["round"] for game in played_games)
 
-    URL_STANDINGS = bdata.Euro_endpoints().standings(latest_round)
+    if latest_round <= 34:
+        roundNumber = latest_round
+    else:
+        roundNumber = 34
 
-    sdata = await bdata.fetch_data(URL_STANDINGS)
+    url_standings = bdata.Euro_endpoints().standings(roundNumber)
+
+    sdata = await bdata.fetch_data(url_standings)
 
     standings = sdata[0].get("standings", [])
     if not standings:
@@ -165,7 +170,7 @@ async def standings_nba(callback: CallbackQuery):
 
     async def format_table(teams, conference_name):
         sorted_teams = sorted(teams, key=lambda x: x["ConferenceRank"])
-        results = [f"\n<b>{conference_name}\n</b>", f"{' ':<5} {'Команда':<30} {'Игры':<10}%\n", f"{"-" * 33}"]
+        results = [f"<b>{conference_name}</b>\n", f"{' ':<5} {'Команда':<30} {'Игры':<10}%\n", f"{"-" * 33}"]
 
         for team in sorted_teams:
             position = team["ConferenceRank"]
