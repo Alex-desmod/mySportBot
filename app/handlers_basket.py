@@ -2,6 +2,7 @@ from aiogram import F, Router
 from aiogram.types import CallbackQuery
 from datetime import datetime, timezone, timedelta
 
+
 from app import keyboards as kb
 import app.basket_data as bdata
 
@@ -24,15 +25,17 @@ async def euroleague(callback: CallbackQuery):
 @router.callback_query(F.data.startswith("NBA"))
 async def nba(callback: CallbackQuery):
     await callback.answer()
-    await callback.message.answer('В процессе разработки...')
+    await callback.message.answer('Здесь ты можешь посмотреть последние результаты, '
+                                  'расписание предстоящих игр и турнирную таблицу',
+                                  reply_markup=await kb.nba())
 
 
-@router.callback_query(F.data.startswith("PAST_EURO"))
+@router.callback_query(F.data == "PAST_EURO_GAMES")
 async def past_euro_games(callback: CallbackQuery):
     await callback.answer()
 
     URL_GAMES = bdata.Euro_endpoints().games()
-    data = await bdata.fetch_euro_games(URL_GAMES)
+    data = await bdata.fetch_data(URL_GAMES)
     if data == "No server answer":
         await callback.message.answer("Нет ответа от сервера.", reply_markup= await kb.euro())
 
@@ -58,12 +61,12 @@ async def past_euro_games(callback: CallbackQuery):
     await callback.message.answer(output, reply_markup= await kb.euro())
 
 
-@router.callback_query(F.data.startswith("FUTURE_EURO"))
+@router.callback_query(F.data == "FUTURE_EURO_GAMES")
 async def future_euro_games(callback: CallbackQuery):
     await callback.answer()
 
     URL_GAMES = bdata.Euro_endpoints().games()
-    data = await bdata.fetch_euro_games(URL_GAMES)
+    data = await bdata.fetch_data(URL_GAMES)
     if data == "No server answer":
         await callback.message.answer("Нет ответа от сервера.", reply_markup= await kb.euro())
 
@@ -98,12 +101,12 @@ async def future_euro_games(callback: CallbackQuery):
     await callback.message.answer(output, reply_markup= await kb.euro())
 
 
-@router.callback_query(F.data.startswith("STANDINGS_EURO"))
+@router.callback_query(F.data == "STANDINGS_EURO")
 async def standings_euro(callback: CallbackQuery):
     await callback.answer()
 
     URL_GAMES = bdata.Euro_endpoints().games()
-    data = await bdata.fetch_euro_games(URL_GAMES)
+    data = await bdata.fetch_data(URL_GAMES)
     if data == "No server answer":
         await callback.message.answer("Нет ответа от сервера.", reply_markup= await kb.euro())
 
@@ -113,7 +116,7 @@ async def standings_euro(callback: CallbackQuery):
 
     URL_STANDINGS = bdata.Euro_endpoints().standings(latest_round)
 
-    sdata = await bdata.fetch_euro_games(URL_STANDINGS)
+    sdata = await bdata.fetch_data(URL_STANDINGS)
 
     standings = sdata[0].get("standings", [])
     if not standings:
@@ -131,3 +134,55 @@ async def standings_euro(callback: CallbackQuery):
 
     output = "\n".join(results)
     await callback.message.answer(output, reply_markup=await kb.euro())
+
+
+@router.callback_query(F.data == "STANDINGS_NBA")
+async def standings_nba(callback: CallbackQuery):
+    await callback.answer()
+
+    URL_STANDINGS = bdata.NBA_endpoints().standings()
+    data = await bdata.fetch_data(URL_STANDINGS)
+    if data == "No server answer":
+        await callback.message.answer("Нет ответа от сервера.", reply_markup=await kb.nba())
+
+    eastern_conf = [team for team in data if team["Conference"] == "Eastern"]
+    western_conf = [team for team in data if team["Conference"] == "Western"]
+
+    async def format_table(teams, conference_name):
+        sorted_teams = sorted(teams, key=lambda x: x["ConferenceRank"])
+        results = [f"\n<b>{conference_name}\n</b>", f"{' ':<5} {'Команда':<30} {'Игры':<10}%\n", f"{"-" * 33}"]
+
+        for team in sorted_teams:
+            position = team["ConferenceRank"]
+            city = team["City"]
+            games_played = team["Wins"] + team["Losses"]
+            win_percentage = team["Percentage"]
+            results.append(f"{position:<8} {city:<20} {games_played:<5} {win_percentage*100:.1f}%")
+
+        output = "\n".join(results)
+        await callback.message.answer(output)
+
+    await format_table(eastern_conf, "Восточная конеренция")
+    await format_table(western_conf, "Западная конференция")
+    await callback.message.answer('Что-нибудь еще?', reply_markup=await kb.nba())
+
+
+@router.callback_query(F.data == "PAST_NBA_GAMES")
+async def past_nba_games(callback: CallbackQuery):
+    await callback.answer()
+    if datetime.today() < datetime(2025, 4, 14):
+        await callback.message.answer('Регулярка НБА настолько длинная и бессмысленная,'
+                                      'что разработчику лень заморачиваться с этим.'
+                                      'Подожди, пожалуйста, до начала плей-офф',
+                                      reply_markup=await kb.nba())
+
+
+@router.callback_query(F.data == "FUTURE_NBA_GAMES")
+async def future_nba_games(callback: CallbackQuery):
+    await callback.answer()
+    if datetime.today() < datetime(2025, 4, 14):
+        await callback.message.answer('Регулярка НБА настолько длинная и бессмысленная,'
+                                      'что разработчику лень заморачиваться с этим.'
+                                      'Подожди, пожалуйста, до начала плей-офф',
+                                      reply_markup=await kb.nba())
+

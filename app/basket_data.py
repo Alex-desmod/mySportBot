@@ -1,5 +1,9 @@
+import os
 import aiohttp
+from dotenv import load_dotenv
 
+load_dotenv()
+NBA_API_KEY = os.getenv('NBA_API_KEY')
 
 class Euro_endpoints():
     server = 'https://api-live.euroleague.net/'
@@ -13,7 +17,15 @@ class Euro_endpoints():
         return url
 
 
-async def fetch_euro_games(url):
+class NBA_endpoints():
+    server = 'https://api.sportsdata.io/'
+
+    def standings(self, version='v3', season='2025'):
+        url = f'{NBA_endpoints.server}{version}/nba/scores/json/Standings/{season}?key={NBA_API_KEY}'
+        return url
+
+
+async def fetch_data(url):
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as response:
             if response.status == 200:

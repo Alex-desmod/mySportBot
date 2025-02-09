@@ -10,12 +10,14 @@ async def start():
 
     return kb.adjust(1).as_markup()
 
+
 async def basket():
     kb = InlineKeyboardBuilder()
     for competition in sports.Basket:
         kb.add(InlineKeyboardButton(text=competition.value, callback_data=competition.name))
 
     return kb.adjust(1).as_markup()
+
 
 async def euro():
     kb = InlineKeyboardBuilder()
@@ -25,5 +27,13 @@ async def euro():
 
     return kb.adjust(1).as_markup()
 
+
+async def nba():
+    kb = InlineKeyboardBuilder()
+    for menu in sports.NBA:
+        kb.add(InlineKeyboardButton(text=menu.value, callback_data=menu.name))
+    kb.add(InlineKeyboardButton(text="Главное меню ⬅️", callback_data='back'))
+
+    return kb.adjust(1).as_markup()
 
 
