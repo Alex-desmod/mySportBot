@@ -14,11 +14,39 @@ class Base(AsyncAttrs, DeclarativeBase):
     created_at: Mapped[datetime] = mapped_column(server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(server_default=func.now(), onupdate=func.now())
 
+
 class User(Base):
     __tablename__ = 'users'
 
     tg_id = mapped_column(BigInteger)
     name: Mapped[str] = mapped_column(String(25))
+
+
+class Cycling(Base):
+    __tablename__ = 'cycling'
+
+    eventId: Mapped[int]
+    name: Mapped[str] = mapped_column(String(50))
+    dateFrom: Mapped[datetime]
+    dateTo: Mapped[datetime]
+    url: Mapped[str] = mapped_column(String(50), nullable=True)
+    location: Mapped[str] = mapped_column(String(20))
+    location_code: Mapped[str] = mapped_column(String(5))
+    winner: Mapped[str] = mapped_column(String(25), nullable=True)
+
+
+class Athletics(Base):
+    __tablename__ = 'athletics'
+
+    eventId: Mapped[int]
+    name: Mapped[str] = mapped_column(String(50))
+    dateFrom: Mapped[datetime]
+    dateTo: Mapped[datetime]
+    url: Mapped[str] = mapped_column(String(50), nullable=True)
+    location: Mapped[str] = mapped_column(String(20))
+    location_code: Mapped[str] = mapped_column(String(5))
+    winners: Mapped[str] = mapped_column(String(25), nullable=True)
+
 
 async def async_db():
     async with engine.begin() as conn:

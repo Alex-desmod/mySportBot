@@ -5,9 +5,11 @@ class Sports(Enum):
     CYCLING = "велоспорт 🚴"
     ATHLETICS = "бега и прочая легкая атлетика 🏃‍♀️🏃"
 
+
 class Basket(Enum):
     EURO = "Евролига"
     NBA = "НБА"
+
 
 class Euro(Enum):
     PAST_EURO_GAMES = "Последние результаты"
@@ -20,3 +22,50 @@ class NBA(Enum):
     FUTURE_NBA_GAMES = "Ближайшие игры"
     STANDINGS_NBA = "Положение команд"
 
+
+class Cycling(Enum):
+    CLASSICS = "Монументы и другие крутые классики"
+    GT = "Гранд-туры 🇮🇹🇫🇷🇪🇸"
+    CYCLING_WC = "Чемпионат мира"
+
+
+class Classics(Enum):
+    SB = "17336"
+    MSR = "17339"
+    RVV = "17345"
+    PR = "17347"
+    AGR = "17348"
+    FW = "17349"
+    LBL = "17350"
+    IL = "17363"
+
+
+class GT(Enum):
+    GIRO = "17365"
+    TDF = "17366"
+    VUELTA = "17367"
+
+
+CYCLING_WC = 17469
+MAJORS = 327
+DIAMONDS = 240
+ATHLETICS_WC = 109
+
+
+class Athletics(Enum):
+    MAJORS = "Марафоны-мейджоры"
+    DIAMOND_LEAGUE = "Бриллиантовая лига 💎"
+    ATHLETICS_WC = "Чемпионат мира"
+
+
+class Countries(Enum):
+    BE = "🇧🇪"
+    FR = "🇫🇷"
+    DE = "🇩🇪"
+    JP = "🇯🇵"
+    IT = "🇮🇹"
+    NL = "🇳🇱"
+    RW = "🇷🇼"
+    ES = "🇪🇸"
+    GB = "🇬🇧"
+    US = "🇺🇸"

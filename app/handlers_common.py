@@ -29,12 +29,14 @@ async def basket(message: Message):
 
 @router.message(Command('cycling'))
 async def cycling(message: Message):
-    await message.answer('В процессе разработки...')
+    await message.answer('У меня есть расписание главных велогонок планеты. Выбирай!',
+                         reply_markup= await kb.cycling())
 
 
 @router.message(Command('athletics'))
 async def athletics(message: Message):
-    await message.answer('В процессе разработки...')
+    await message.answer('Большие события из мира легкой атлетики',
+                         reply_markup= await kb.athletics())
 
 
 @router.callback_query(F.data == "back")
@@ -45,7 +47,8 @@ async def back(callback: CallbackQuery):
 
 @router.message()
 async def catch_all_messages(message: Message):
-    await message.answer("Сорри, я тупой бот и не умею отвечать на сообщения. Пожалуйста, выбери что-нибудь из меню",
+    await message.answer("Сорри, я тупой бот и не умею отвечать на сообщения. "
+                         "Пожалуйста, выбери что-нибудь из меню",
                          reply_markup=await kb.start())
 
 

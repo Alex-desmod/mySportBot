@@ -1,6 +1,9 @@
+import logging
 import os
 import aiohttp
 from dotenv import load_dotenv
+
+logger = logging.getLogger(__name__)
 
 load_dotenv()
 NBA_API_KEY = os.getenv('NBA_API_KEY')
@@ -31,7 +34,8 @@ async def fetch_data(url):
             if response.status == 200:
                 return await response.json()
             else:
-                return "No server answer"
+                logger.error(f'No server answer {response.status}')
+                return None
 
 
 

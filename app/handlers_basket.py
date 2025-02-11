@@ -36,7 +36,7 @@ async def past_euro_games(callback: CallbackQuery):
 
     url_games = bdata.Euro_endpoints().games()
     data = await bdata.fetch_data(url_games)
-    if data == "No server answer":
+    if not data:
         await callback.message.answer("Нет ответа от сервера.", reply_markup= await kb.euro())
 
     # Defining the latest round (max round)
@@ -82,7 +82,7 @@ async def future_euro_games(callback: CallbackQuery):
 
     url_games = bdata.Euro_endpoints().games()
     data = await bdata.fetch_data(url_games)
-    if data == "No server answer":
+    if not data:
         await callback.message.answer("Нет ответа от сервера.", reply_markup= await kb.euro())
 
     # Defining the latest round (max round)
@@ -122,7 +122,7 @@ async def standings_euro(callback: CallbackQuery):
 
     url_games = bdata.Euro_endpoints().games()
     data = await bdata.fetch_data(url_games)
-    if data == "No server answer":
+    if not data:
         await callback.message.answer("Нет ответа от сервера.", reply_markup= await kb.euro())
 
     # Defining the latest round (max round)
@@ -162,7 +162,7 @@ async def standings_nba(callback: CallbackQuery):
 
     URL_STANDINGS = bdata.NBA_endpoints().standings()
     data = await bdata.fetch_data(URL_STANDINGS)
-    if data == "No server answer":
+    if not data:
         await callback.message.answer("Нет ответа от сервера.", reply_markup=await kb.nba())
 
     eastern_conf = [team for team in data if team["Conference"] == "Eastern"]
