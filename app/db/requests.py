@@ -1,5 +1,5 @@
 from app.db.models import async_session
-from app.db.models import User, Cycling
+from app.db.models import User, Cycling, Athletics
 from sqlalchemy import select
 
 
@@ -28,9 +28,9 @@ async def get_cycling(eventId, name, dateFrom, dateTo, url, location, location_c
 
 async def get_athletics(eventId, name, dateFrom, dateTo, url, location, location_code):
     async with async_session() as session:
-        race = await session.scalar(select(Cycling).where(Cycling.eventId == eventId))
+        race = await session.scalar(select(Athletics).where(Athletics.eventId == eventId))
         if not race:
-            session.add(Cycling(eventId=eventId,
+            session.add(Athletics(eventId=eventId,
                                 name=name,
                                 dateFrom=dateFrom,
                                 dateTo=dateTo,
@@ -38,7 +38,7 @@ async def get_athletics(eventId, name, dateFrom, dateTo, url, location, location
                                 location=location,
                                 location_code=location_code))
             await session.commit()
-        return await session.scalar(select(Cycling).where(Cycling.eventId == eventId))
+        return await session.scalar(select(Athletics).where(Athletics.eventId == eventId))
 
 
 
