@@ -46,8 +46,8 @@ async def classics(callback: CallbackQuery):
 
         results.append(output)
 
-    await callback.message.answer("\n".join(results))
-    await callback.message.answer('Что-нибудь еще?', reply_markup=await kb.cycling())
+    message = "\n".join(results)
+    await callback.message.answer(message, reply_markup=await kb.cycling())
         
 @router.callback_query(F.data == "GT")
 async def gt(callback: CallbackQuery):
@@ -75,8 +75,8 @@ async def gt(callback: CallbackQuery):
 
         results.append(output)
 
-    await callback.message.answer("\n".join(results))
-    await callback.message.answer('Что-нибудь еще?', reply_markup=await kb.cycling())
+    message = "\n".join(results)
+    await callback.message.answer(message)
 
 
 @router.callback_query(F.data == "CYCLING_WC")

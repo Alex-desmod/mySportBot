@@ -52,17 +52,17 @@ async def majors(callback: CallbackQuery):
         results.append(output)
 
     #Temporary call to correct wrong dates
-    await  rq.correct_date(18167,
-                           dateFrom=datetime.strptime("2025-09-21T00:00:00", "%Y-%m-%dT%H:%M:%S"),
-                           dateTo=datetime.strptime("2025-09-21T00:00:00", "%Y-%m-%dT%H:%M:%S"))
-
-    await rq.correct_date(18168,
-                    dateFrom=datetime.strptime("2025-10-12T00:00:00", "%Y-%m-%dT%H:%M:%S"),
-                    dateTo=datetime.strptime("2025-10-12T00:00:00", "%Y-%m-%dT%H:%M:%S"))
-
-    await rq.correct_date(18169,
-                          dateFrom=datetime.strptime("2025-11-02T00:00:00", "%Y-%m-%dT%H:%M:%S"),
-                          dateTo=datetime.strptime("2025-11-02T00:00:00", "%Y-%m-%dT%H:%M:%S"))
+    # await  rq.correct_date(18167,
+    #                        dateFrom=datetime.strptime("2025-09-21T00:00:00", "%Y-%m-%dT%H:%M:%S"),
+    #                        dateTo=datetime.strptime("2025-09-21T00:00:00", "%Y-%m-%dT%H:%M:%S"))
+    #
+    # await rq.correct_date(18168,
+    #                 dateFrom=datetime.strptime("2025-10-12T00:00:00", "%Y-%m-%dT%H:%M:%S"),
+    #                 dateTo=datetime.strptime("2025-10-12T00:00:00", "%Y-%m-%dT%H:%M:%S"))
+    #
+    # await rq.correct_date(18169,
+    #                       dateFrom=datetime.strptime("2025-11-02T00:00:00", "%Y-%m-%dT%H:%M:%S"),
+    #                       dateTo=datetime.strptime("2025-11-02T00:00:00", "%Y-%m-%dT%H:%M:%S"))
 
     #Since the API doesn't know about the Sydney Marathon I had to add it manually to my DB
     set_sydney = await rq.get_athletics(eventId=777,
@@ -86,8 +86,8 @@ async def majors(callback: CallbackQuery):
     sydney = results.pop(-1)
     results.insert(3, sydney)
 
-    await callback.message.answer("\n".join(results))
-    await callback.message.answer('Что-нибудь еще?', reply_markup=await kb.athletics())
+    message = "\n".join(results)
+    await callback.message.answer(message, reply_markup=await kb.athletics())
 
 
 @router.callback_query(F.data == "DIAMOND_LEAGUE")
@@ -122,8 +122,8 @@ async def diamonds(callback: CallbackQuery):
 
         results.append(output)
 
-    await callback.message.answer("\n".join(results))
-    await callback.message.answer('Что-нибудь еще?', reply_markup=await kb.athletics())
+    message = "\n".join(results)
+    await callback.message.answer(message, reply_markup=await kb.athletics())
 
 
 @router.callback_query(F.data == "ATHLETICS_WC")

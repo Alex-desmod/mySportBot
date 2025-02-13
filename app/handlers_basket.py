@@ -5,8 +5,11 @@ from datetime import datetime, timezone, timedelta
 
 from app import keyboards as kb
 import app.basket_data as bdata
+import app.sports as sports
 
 router = Router(name=__name__)
+
+MOSCOW_TZ = timezone(timedelta(hours=3))  # Noscow TZ
 
 @router.callback_query(F.data == "BASKET")
 async def basket(callback: CallbackQuery):
@@ -72,8 +75,8 @@ async def past_euro_games(callback: CallbackQuery):
         game_date = game["date"][:10]
         results.append(f"{game_date} | <b>{local_team}</b> - <b>{road_team:<15}</b> {local_score:>3}:{road_score:<3}")
 
-    output = "\n\n".join(results)
-    await callback.message.answer(output, reply_markup= await kb.euro())
+    message = "\n\n".join(results)
+    await callback.message.answer(message, reply_markup= await kb.euro())
 
 
 @router.callback_query(F.data == "FUTURE_EURO_GAMES")
@@ -112,8 +115,8 @@ async def future_euro_games(callback: CallbackQuery):
         moscow_time = utc_time.astimezone(MOSCOW_TZ).strftime("%H:%M")
         results.append(f"{game_date} {moscow_time} | <b>{local_team:<15}</b> vs <b>{road_team:<15}</b>")
 
-    output = f"Предстоящие матчи (время Мск):\n\n" + "\n\n".join(results)
-    await callback.message.answer(output, reply_markup= await kb.euro())
+    message = f"Предстоящие матчи (время Мск):\n\n" + "\n\n".join(results)
+    await callback.message.answer(message, reply_markup= await kb.euro())
 
 
 @router.callback_query(F.data == "STANDINGS_EURO")
@@ -152,8 +155,8 @@ async def standings_euro(callback: CallbackQuery):
         win_percentage = (games_won / games_played * 100) if games_played else 0
         results.append(f"{position:<5} {name:<20} {games_played:<5} {win_percentage:.1f}%")
 
-    output = "\n".join(results)
-    await callback.message.answer(output, reply_markup=await kb.euro())
+    message = "\n".join(results)
+    await callback.message.answer(message, reply_markup=await kb.euro())
 
 
 @router.callback_query(F.data == "STANDINGS_NBA")
@@ -193,8 +196,25 @@ async def past_nba_games(callback: CallbackQuery):
     if datetime.today() < datetime(2025, 4, 14):
         await callback.message.answer('Регулярка НБА настолько длинная и бессмысленная,'
                                       'что разработчику лень заморачиваться с этим.'
-                                      'Подожди, пожалуйста, до начала плей-офф',
+                                      'Подожди, пожалуйста, до начала плей-офф 🤷‍♂️',
                                       reply_markup=await kb.nba())
+    else:
+        url_games = bdata.NBA_endpoints().po_games()
+        games = await bdata.fetch_data(url_games)
+        if not games:
+            await callback.message.answer("Нет ответа от сервера.", reply_markup=await kb.nba())
+
+        results = []
+        for game in games:
+            gameday = datetime.strptime(game["Day"], "%Y-%m-%dT%H:%M:%S")
+
+            if (datetime.today() - timedelta(weeks=1)) < gameday < datetime.today():
+                results.append(f"{game["Day"][:10]} | <b>{sports.NBA_teams[game["HomeTeam"]].value}</b> - "
+                               f"<b>{sports.NBA_teams[game["AwayTeam"]].value:<15}</b> "
+                               f"{game["HomeTeamScore"]}:{game["AwayTeamScore"]}")
+
+        message = "\n".join(results)
+        await callback.message.answer(message, reply_markup=await kb.nba())
 
 
 @router.callback_query(F.data == "FUTURE_NBA_GAMES")
@@ -203,6 +223,28 @@ async def future_nba_games(callback: CallbackQuery):
     if datetime.today() < datetime(2025, 4, 14):
         await callback.message.answer('Регулярка НБА настолько длинная и бессмысленная,'
                                       'что разработчику лень заморачиваться с этим.'
-                                      'Подожди, пожалуйста, до начала плей-офф',
+                                      'Подожди, пожалуйста, до начала плей-офф 🤷‍♂️',
                                       reply_markup=await kb.nba())
+    else:
+        url_games = bdata.NBA_endpoints().po_games()
+        games = await bdata.fetch_data(url_games)
+        if not games:
+            await callback.message.answer("Нет ответа от сервера.", reply_markup=await kb.nba())
+
+        results = []
+        for game in games:
+            gameday = datetime.strptime(game["Day"], "%Y-%m-%dT%H:%M:%S")
+            utc_time = datetime.strptime(game["DateTimeUTC"], "%Y-%m-%dT%H:%M:%S").replace(tzinfo=timezone.utc)
+            moscow_time = utc_time.astimezone(MOSCOW_TZ).strftime("%H:%M")
+
+            if datetime.today() <= gameday < (datetime.today() + timedelta(weeks=1)):
+                results.append(f"{game["Day"][:10]} {moscow_time} | "
+                               f"<b>{sports.NBA_teams[game["HomeTeam"]].value:<15}</b> - "
+                               f"<b>{sports.NBA_teams[game["AwayTeam"]].value:>15}</b>")
+
+        message = f"Предстоящие матчи (время Мск):\n\n" + "\n\n".join(results)
+        await callback.message.answer(message, reply_markup=await kb.nba())
+
+
+
 

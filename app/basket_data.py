@@ -27,6 +27,10 @@ class NBA_endpoints():
         url = f'{NBA_endpoints.server}{version}/nba/scores/json/Standings/{season}?key={NBA_API_KEY}'
         return url
 
+    def po_games(self, version='v3', season='2025POST'):
+        url = f'{NBA_endpoints.server}{version}/nba/scores/json/SchedulesBasic/{season}?key={NBA_API_KEY}'
+        return url
+
 
 async def fetch_data(url):
     async with aiohttp.ClientSession() as session:

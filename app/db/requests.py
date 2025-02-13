@@ -42,16 +42,16 @@ async def get_athletics(eventId, name, dateFrom, dateTo, url, location, location
         return await session.scalar(select(Athletics).where(Athletics.eventId == eventId))
 
 #Временная функция, чтобы исправить косячные даты в DB
-async def correct_date(eventId, dateFrom, dateTo):
-    async with async_session() as session:
-        stmt = select(Athletics).filter_by(eventId=eventId)  # Формируем запрос
-        result = await session.execute(stmt)  # Выполняем
-        race = result.scalar_one_or_none()  # Получаем объект или None
-
-        if race:
-            race.dateFrom = dateFrom
-            race.dateTo = dateTo# Обновляем поле
-            await session.commit()  # Фиксируем изменения
+# async def correct_date(eventId, dateFrom, dateTo):
+#     async with async_session() as session:
+#         stmt = select(Athletics).filter_by(eventId=eventId)  # Формируем запрос
+#         result = await session.execute(stmt)  # Выполняем
+#         race = result.scalar_one_or_none()  # Получаем объект или None
+#
+#         if race:
+#             race.dateFrom = dateFrom
+#             race.dateTo = dateTo# Обновляем поле
+#             await session.commit()  # Фиксируем изменения
 
 
 
