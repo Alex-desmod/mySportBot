@@ -44,6 +44,7 @@ class Athletics(Base):
     dateTo: Mapped[datetime]
     url: Mapped[str] = mapped_column(String(50), nullable=True)
     location: Mapped[str] = mapped_column(String(20))
+    location_name: Mapped[str] = mapped_column(String(20))
     location_code: Mapped[str] = mapped_column(String(5))
     winners: Mapped[str] = mapped_column(String(25), nullable=True)
 

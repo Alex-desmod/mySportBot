@@ -59,13 +59,24 @@ class Athletics(Enum):
 
 
 class Countries(Enum):
+    AU = "🇦🇺"
     BE = "🇧🇪"
-    FR = "🇫🇷"
+    CN = "🇨🇳"
+    CH = "🇨🇭"
+    ES = "🇪🇸"
     DE = "🇩🇪"
+    FR = "🇫🇷"
+    GB = "🇬🇧"
     JP = "🇯🇵"
     IT = "🇮🇹"
+    MA = "🇲🇦"
+    MC = "🇲🇨"
     NL = "🇳🇱"
+    NO = "🇳🇴"
+    QA = "🇶🇦"
+    PL = "🇵🇱"
     RW = "🇷🇼"
-    ES = "🇪🇸"
-    GB = "🇬🇧"
+    SE = "🇸🇪"
+
+
     US = "🇺🇸"
