@@ -11,7 +11,7 @@ ALLSPORTDB_TOKEN = os.getenv('ALLSPORTDB_TOKEN')
 class Athletics_endpoints():
     server = 'https://api.allsportdb.com/v3/'
 
-    def calendar(self, dateFrom, dateTo, competitionId, page):
+    def calendar(self, dateFrom, dateTo, competitionId, page=1):
         url = (f'{Athletics_endpoints.server}calendar?dateFrom={dateFrom}&dateTo={dateTo}&competitionId={competitionId}'
                f'&page={page}')
         return url

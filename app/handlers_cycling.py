@@ -80,7 +80,7 @@ async def gt(callback: CallbackQuery):
 
 
 @router.callback_query(F.data == "CYCLING_WC")
-async def gt(callback: CallbackQuery):
+async def cycling_wc(callback: CallbackQuery):
     await callback.answer()
     url = cdata.Cycling_endpoints().calendar(dateFrom, dateTo, sports.CYCLING_WC)
     data = await cdata.fetch_data(url)

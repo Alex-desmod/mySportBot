@@ -9,7 +9,7 @@ import app.db.requests as rq
 
 router = Router()
 
-@router.callback_query(F.data.startswith("ATHLETICS"))
+@router.callback_query(F.data == "ATHLETICS")
 async def athletics(callback: CallbackQuery):
     await callback.answer()
     await callback.message.answer('Большие события из мира легкой атлетики',
@@ -66,13 +66,13 @@ async def majors(callback: CallbackQuery):
 
     #Since the API doesn't know about the Sydney Marathon I had to add it manually to my DB
     set_sydney = await rq.get_athletics(eventId=777,
-                                    name="2025 World Marathon Majors - Sydney Marathon",
-                                    dateFrom=datetime.strptime("2025-08-31T00:00:00", "%Y-%m-%dT%H:%M:%S"),
-                                    dateTo=datetime.strptime("2025-08-31T00:00:00", "%Y-%m-%dT%H:%M:%S"),
-                                    url="https://www.tcssydneymarathon.com/",
-                                    location="Australia",
-                                    location_name="Sydney",
-                                    location_code="au")
+                                name="2025 World Marathon Majors - Sydney Marathon",
+                                dateFrom=datetime.strptime("2025-08-31T00:00:00", "%Y-%m-%dT%H:%M:%S"),
+                                dateTo=datetime.strptime("2025-08-31T00:00:00", "%Y-%m-%dT%H:%M:%S"),
+                                url="https://www.tcssydneymarathon.com/",
+                                location="Australia",
+                                location_name="Sydney",
+                                location_code="au")
 
     get_sydney = (f"{set_sydney.dateFrom.strftime("%Y-%m-%d")} | <b>{set_sydney.name.split("-", 1)[-1].strip()}</b> "
                   f"{sports.Countries[set_sydney.location_code.upper()].value}\n")
@@ -124,3 +124,29 @@ async def diamonds(callback: CallbackQuery):
 
     await callback.message.answer("\n".join(results))
     await callback.message.answer('Что-нибудь еще?', reply_markup=await kb.athletics())
+
+
+@router.callback_query(F.data == "ATHLETICS_WC")
+async def athletics_wc(callback: CallbackQuery):
+    await callback.answer()
+
+    url = adata.Athletics_endpoints().calendar(dateFrom, dateTo, competitionId=sports.ATHLETICS_WC)
+    data = await adata.fetch_data(url)
+
+    race = await rq.get_athletics(eventId=data[0]["id"],
+                                    name=data[0]["name"],
+                                    dateFrom=datetime.strptime(data[0]["dateFrom"], "%Y-%m-%dT%H:%M:%S"),
+                                    dateTo=datetime.strptime(data[0]["dateTo"], "%Y-%m-%dT%H:%M:%S"),
+                                    url=data[0]["webUrl"],
+                                    location=data[0]["location"][0]["name"],
+                                    location_name=data[0]["location"][0]["locations"][0]["name"],
+                                    location_code=data[0]["location"][0]["code"])
+
+    result = (f"{race.dateFrom.strftime("%Y-%m-%d")} - {race.dateTo.strftime("%Y-%m-%d")} | "
+                  f"<b>{race.name[5:]}</b>\n"
+                  f"{race.location:>40}, {race.location_name} {sports.Countries[race.location_code.upper()].value}\n")
+
+    if datetime.today() > race.dateTo:
+        result += f"✅\n"
+
+    await callback.message.answer(result)
