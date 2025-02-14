@@ -1,3 +1,5 @@
+import json
+
 from aiogram import Router, F
 from aiogram.filters import CommandStart, Command
 from aiogram.types import Message, CallbackQuery
@@ -11,14 +13,13 @@ import app.db.requests as rq
 router = Router(name=__name__)
 router.include_routers(hb.router, hc.router, ha.router)
 
+with open("app/messages.json", "r", encoding="utf-8") as file:
+    messages = json.load(file)
+
 @router.message(CommandStart())
 async def cmd_start(message: Message):
     await rq.set_user(message.from_user.id, message.from_user.first_name)
-    await message.answer(f'Привет, {message.from_user.first_name} 😊\n'
-                         f'Я не самый продвинутый в мире бот, и в общем-то создан только для того, чтобы мой '
-                         f'разработчик потренировал свои скромные скиллы. Но я могу предложить расписание и последние '
-                         f'результаты некоторых спортивных соревнований. Выбор ограничен узким кругозором '
-                         f'разработчика. Может быть попозже он додумается до чего-то еще 😉',
+    await message.answer(f'Привет, {message.from_user.first_name} 😊\n{messages[0]["start"]}',
                          reply_markup= await kb.start())
 
 
@@ -47,8 +48,7 @@ async def back(callback: CallbackQuery):
 
 @router.message()
 async def catch_all_messages(message: Message):
-    await message.answer("Сорри, я тупой бот и не умею отвечать на сообщения. "
-                         "Пожалуйста, выбери что-нибудь из меню",
+    await message.answer(messages[0]["sorry"],
                          reply_markup=await kb.start())
 
 

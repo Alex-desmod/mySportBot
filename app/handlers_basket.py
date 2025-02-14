@@ -10,6 +10,7 @@ import app.sports as sports
 router = Router(name=__name__)
 
 MOSCOW_TZ = timezone(timedelta(hours=3))  # Noscow TZ
+current_year = datetime.now().year
 
 @router.callback_query(F.data == "BASKET")
 async def basket(callback: CallbackQuery):
@@ -33,11 +34,22 @@ async def nba(callback: CallbackQuery):
                                   reply_markup=await kb.nba())
 
 
+if datetime.now() < datetime(current_year, 10, 1):
+    #for Euroleague urls
+    seasonCode = f'E{current_year - 1}'
+    #for NBA urls
+    season = current_year
+    season_po = f'{current_year}POST'
+else:
+    seasonCode = f'E{current_year}'
+    season = current_year + 1
+    season_po = f'{current_year + 1}POST'
+
 @router.callback_query(F.data == "PAST_EURO_GAMES")
 async def past_euro_games(callback: CallbackQuery):
     await callback.answer()
 
-    url_games = bdata.Euro_endpoints().games()
+    url_games = bdata.Euro_endpoints().games(seasonCode=seasonCode)
     data = await bdata.fetch_data(url_games)
     if not data:
         await callback.message.answer("Нет ответа от сервера.", reply_markup= await kb.euro())
@@ -83,7 +95,7 @@ async def past_euro_games(callback: CallbackQuery):
 async def future_euro_games(callback: CallbackQuery):
     await callback.answer()
 
-    url_games = bdata.Euro_endpoints().games()
+    url_games = bdata.Euro_endpoints().games(seasonCode=seasonCode)
     data = await bdata.fetch_data(url_games)
     if not data:
         await callback.message.answer("Нет ответа от сервера.", reply_markup= await kb.euro())
@@ -106,7 +118,6 @@ async def future_euro_games(callback: CallbackQuery):
 
     # Formatting the results
     results = []
-    MOSCOW_TZ = timezone(timedelta(hours=3))  # Noscow TZ
     for game in upcoming_games:
         local_team = game["local"]["club"]["abbreviatedName"]
         road_team = game["road"]["club"]["abbreviatedName"]
@@ -123,7 +134,7 @@ async def future_euro_games(callback: CallbackQuery):
 async def standings_euro(callback: CallbackQuery):
     await callback.answer()
 
-    url_games = bdata.Euro_endpoints().games()
+    url_games = bdata.Euro_endpoints().games(seasonCode=seasonCode)
     data = await bdata.fetch_data(url_games)
     if not data:
         await callback.message.answer("Нет ответа от сервера.", reply_markup= await kb.euro())
@@ -163,7 +174,7 @@ async def standings_euro(callback: CallbackQuery):
 async def standings_nba(callback: CallbackQuery):
     await callback.answer()
 
-    URL_STANDINGS = bdata.NBA_endpoints().standings()
+    URL_STANDINGS = bdata.NBA_endpoints().standings(season=season)
     data = await bdata.fetch_data(URL_STANDINGS)
     if not data:
         await callback.message.answer("Нет ответа от сервера.", reply_markup=await kb.nba())
@@ -193,13 +204,13 @@ async def standings_nba(callback: CallbackQuery):
 @router.callback_query(F.data == "PAST_NBA_GAMES")
 async def past_nba_games(callback: CallbackQuery):
     await callback.answer()
-    if datetime.today() < datetime(2025, 4, 14):
+    if datetime.today() < datetime(current_year, 4, 14):
         await callback.message.answer('Регулярка НБА настолько длинная и бессмысленная,'
                                       'что разработчику лень заморачиваться с этим.'
                                       'Подожди, пожалуйста, до начала плей-офф 🤷‍♂️',
                                       reply_markup=await kb.nba())
     else:
-        url_games = bdata.NBA_endpoints().po_games()
+        url_games = bdata.NBA_endpoints().po_games(season=season_po)
         games = await bdata.fetch_data(url_games)
         if not games:
             await callback.message.answer("Нет ответа от сервера.", reply_markup=await kb.nba())
@@ -220,13 +231,13 @@ async def past_nba_games(callback: CallbackQuery):
 @router.callback_query(F.data == "FUTURE_NBA_GAMES")
 async def future_nba_games(callback: CallbackQuery):
     await callback.answer()
-    if datetime.today() < datetime(2025, 4, 14):
+    if datetime.today() < datetime(current_year, 4, 14):
         await callback.message.answer('Регулярка НБА настолько длинная и бессмысленная,'
                                       'что разработчику лень заморачиваться с этим.'
                                       'Подожди, пожалуйста, до начала плей-офф 🤷‍♂️',
                                       reply_markup=await kb.nba())
     else:
-        url_games = bdata.NBA_endpoints().po_games()
+        url_games = bdata.NBA_endpoints().po_games(season=season_po)
         games = await bdata.fetch_data(url_games)
         if not games:
             await callback.message.answer("Нет ответа от сервера.", reply_markup=await kb.nba())
