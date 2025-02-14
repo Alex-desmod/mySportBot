@@ -25,25 +25,26 @@ async def cmd_start(message: Message):
 
 @router.message(Command('basket'))
 async def basket(message: Message):
-    await message.answer('Выбери турнир', reply_markup= await kb.basket())
+    await message.answer(messages[0]["basket"], reply_markup= await kb.basket())
 
 
 @router.message(Command('cycling'))
 async def cycling(message: Message):
-    await message.answer('У меня есть расписание главных велогонок планеты. Выбирай!',
+    await message.answer(messages[0]["cycling"],
                          reply_markup= await kb.cycling())
 
 
 @router.message(Command('athletics'))
 async def athletics(message: Message):
-    await message.answer('Большие события из мира легкой атлетики',
+    await message.answer(messages[0]["athletics"],
                          reply_markup= await kb.athletics())
 
 
 @router.callback_query(F.data == "back")
 async def back(callback: CallbackQuery):
     await callback.answer()
-    await callback.message.answer('Вот что у меня в меню. Выбирай, если интересно.', reply_markup=await kb.start())
+    await callback.message.answer(messages[0]["menu"],
+                                  reply_markup=await kb.start())
 
 
 @router.message()

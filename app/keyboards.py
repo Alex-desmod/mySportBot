@@ -23,7 +23,7 @@ async def euro():
     kb = InlineKeyboardBuilder()
     for menu in sports.Euro:
         kb.add(InlineKeyboardButton(text=menu.value, callback_data=menu.name))
-    kb.add(InlineKeyboardButton(text="Главное меню ⬅️", callback_data='back'))
+    kb.add(InlineKeyboardButton(text="Главное меню 🔙", callback_data='back'))
 
     return kb.adjust(1).as_markup()
 
@@ -32,7 +32,7 @@ async def nba():
     kb = InlineKeyboardBuilder()
     for menu in sports.NBA:
         kb.add(InlineKeyboardButton(text=menu.value, callback_data=menu.name))
-    kb.add(InlineKeyboardButton(text="Главное меню ⬅️", callback_data='back'))
+    kb.add(InlineKeyboardButton(text="Главное меню 🔙", callback_data='back'))
 
     return kb.adjust(1).as_markup()
 
@@ -41,7 +41,7 @@ async def cycling():
     kb = InlineKeyboardBuilder()
     for menu in sports.Cycling:
         kb.add(InlineKeyboardButton(text=menu.value, callback_data=menu.name))
-    kb.add(InlineKeyboardButton(text="Главное меню ⬅️", callback_data='back'))
+    kb.add(InlineKeyboardButton(text="Главное меню 🔙", callback_data='back'))
 
     return kb.adjust(1).as_markup()
 
@@ -50,7 +50,7 @@ async def athletics():
     kb = InlineKeyboardBuilder()
     for menu in sports.Athletics:
         kb.add(InlineKeyboardButton(text=menu.value, callback_data=menu.name))
-    kb.add(InlineKeyboardButton(text="Главное меню ⬅️", callback_data='back'))
+    kb.add(InlineKeyboardButton(text="Главное меню 🔙", callback_data='back'))
 
     return kb.adjust(1).as_markup()
 

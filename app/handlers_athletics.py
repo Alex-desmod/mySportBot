@@ -1,3 +1,5 @@
+import json
+
 from aiogram import F, Router
 from aiogram.types import CallbackQuery
 from datetime import datetime, timezone, timedelta
@@ -9,10 +11,13 @@ import app.db.requests as rq
 
 router = Router()
 
+with open("app/messages.json", "r", encoding="utf-8") as file:
+    messages = json.load(file)
+
 @router.callback_query(F.data == "ATHLETICS")
 async def athletics(callback: CallbackQuery):
     await callback.answer()
-    await callback.message.answer('Большие события из мира легкой атлетики',
+    await callback.message.answer(messages[0]["athletics"],
                                   reply_markup= await kb.athletics())
 
 
