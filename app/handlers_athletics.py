@@ -27,7 +27,7 @@ dateTo = f"{datetime.now().year}-12-31"
 
 @router.callback_query(F.data == "MAJORS")
 async def majors(callback: CallbackQuery):
-    await callback.answer()
+    await callback.answer(messages[0]["running"])
 
     data = []
     for i in range(1, 10):
@@ -120,7 +120,7 @@ async def diamonds(callback: CallbackQuery):
 
         output = (f"{race.dateFrom.strftime("%Y-%m-%d")} | "
                   f"<b>{race.name[5:]}</b>\n"
-                  f"{race.location:>40}, {race.location_name} {sports.Countries[race.location_code.upper()].value}\n")
+                  f"{race.location:>25}, {race.location_name} {sports.Countries[race.location_code.upper()].value}\n")
 
         if datetime.today() > race.dateTo:
             output += f"✅\n"

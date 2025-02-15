@@ -24,17 +24,17 @@ async def basket(callback: CallbackQuery):
                                   reply_markup= await kb.basket())
 
 
-@router.callback_query(F.data.startswith("EURO"))
+@router.callback_query(F.data == "EURO")
 async def euroleague(callback: CallbackQuery):
     await callback.answer('I feel devotion')
     await callback.message.answer(messages[0]["basket2"],
                                   reply_markup= await kb.euro())
 
 
-@router.callback_query(F.data.startswith("NBA"))
+@router.callback_query(F.data == "NBA")
 async def nba(callback: CallbackQuery):
     await callback.answer()
-    await callback.message.answer(messages[0]["basket2"],
+    await callback.message.answer(messages[0]["game"],
                                   reply_markup=await kb.nba())
 
 
