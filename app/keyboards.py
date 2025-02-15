@@ -1,4 +1,4 @@
-from aiogram.types import InlineKeyboardButton
+from aiogram.types import InlineKeyboardButton, ReplyKeyboardMarkup, KeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 import app.sports as sports
@@ -53,6 +53,13 @@ async def athletics():
     kb.add(InlineKeyboardButton(text="Главное меню 🔙", callback_data='back'))
 
     return kb.adjust(1).as_markup()
+
+
+cancel_kb = ReplyKeyboardMarkup(
+    keyboard=[[KeyboardButton(text="❌ Отмена")]],
+    resize_keyboard=True,
+    one_time_keyboard=True
+)
 
 
 

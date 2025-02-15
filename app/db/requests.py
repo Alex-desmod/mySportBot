@@ -10,6 +10,11 @@ async def set_user(tg_id, name):
             session.add(User(tg_id=tg_id, name=name))
             await session.commit()
 
+async def get_admins():
+    async with async_session() as session:
+        result = await session.execute(select(User).where(User.is_admin.is_(True)))
+        return result.scalars().all()
+
 
 async def get_cycling(eventId, name, dateFrom, dateTo, url, location, location_code):
     async with async_session() as session:

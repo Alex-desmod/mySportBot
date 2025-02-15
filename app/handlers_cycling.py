@@ -28,7 +28,7 @@ dateTo = f"{datetime.now().year}-12-31"
 
 @router.callback_query(F.data == "CLASSICS")
 async def classics(callback: CallbackQuery):
-    await callback.answer()
+    await callback.answer(messages[0]["classics"])
 
     results = []
     for event in sports.Classics:

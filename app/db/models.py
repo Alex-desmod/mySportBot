@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import Integer, BigInteger, String, ForeignKey, func
+from sqlalchemy import Integer, BigInteger, String, Boolean, ForeignKey, func
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy.ext.asyncio import AsyncAttrs, async_sessionmaker, create_async_engine
 
@@ -20,6 +20,7 @@ class User(Base):
 
     tg_id = mapped_column(BigInteger)
     name: Mapped[str] = mapped_column(String(25))
+    is_admin: Mapped[bool] = mapped_column(Boolean, default=False)
 
 
 class Cycling(Base):
