@@ -48,7 +48,7 @@ async def majors(callback: CallbackQuery):
                                     location_name=event["location"][0]["locations"][0]["name"],
                                     location_code=event["location"][0]["code"])
 
-        output = (f"{race.dateFrom.strftime("%Y-%m-%d")} | <b>{race.name.split("-", 1)[-1].strip()}</b> "
+        output = (f"{race.dateFrom.strftime('%Y-%m-%d')} | <b>{race.name.split('-', 1)[-1].strip()}</b> "
                   f"{sports.Countries[race.location_code.upper()].value}\n")
 
         if datetime.today() > race.dateTo:
@@ -79,7 +79,7 @@ async def majors(callback: CallbackQuery):
                                 location_name="Sydney",
                                 location_code="au")
 
-    get_sydney = (f"{set_sydney.dateFrom.strftime("%Y-%m-%d")} | <b>{set_sydney.name.split("-", 1)[-1].strip()}</b> "
+    get_sydney = (f"{set_sydney.dateFrom.strftime('%Y-%m-%d')} | <b>{set_sydney.name.split('-', 1)[-1].strip()}</b> "
                   f"{sports.Countries[set_sydney.location_code.upper()].value}\n")
 
     if datetime.today() > set_sydney.dateTo:
@@ -118,7 +118,7 @@ async def diamonds(callback: CallbackQuery):
                                     location_name=event["location"][0]["locations"][0]["name"],
                                     location_code=event["location"][0]["code"])
 
-        output = (f"{race.dateFrom.strftime("%Y-%m-%d")} | "
+        output = (f"{race.dateFrom.strftime('%Y-%m-%d')} | "
                   f"<b>{race.name[5:]}</b>\n"
                   f"{race.location:>25}, {race.location_name} {sports.Countries[race.location_code.upper()].value}\n")
 
@@ -147,7 +147,7 @@ async def athletics_wc(callback: CallbackQuery):
                                     location_name=data[0]["location"][0]["locations"][0]["name"],
                                     location_code=data[0]["location"][0]["code"])
 
-    result = (f"{race.dateFrom.strftime("%Y-%m-%d")} - {race.dateTo.strftime("%Y-%m-%d")} | "
+    result = (f"{race.dateFrom.strftime('%Y-%m-%d')} - {race.dateTo.strftime('%Y-%m-%d')} | "
                   f"<b>{race.name[5:]}</b>\n"
                   f"{race.location:>40}, {race.location_name} {sports.Countries[race.location_code.upper()].value}\n")
 

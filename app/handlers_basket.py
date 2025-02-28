@@ -14,7 +14,7 @@ router = Router(name=__name__)
 with open("app/messages.json", "r", encoding="utf-8") as file:
     messages = json.load(file)
 
-MOSCOW_TZ = timezone(timedelta(hours=3))  # Noscow TZ
+MOSCOW_TZ = timezone(timedelta(hours=3))  # Moscow TZ
 current_year = datetime.now().year
 
 @router.callback_query(F.data == "BASKET")
@@ -166,7 +166,7 @@ async def standings_euro(callback: CallbackQuery):
         await callback.message.answer(messages[0]["notable"])
 
     # Formatting the table
-    results = [f"{' ':<5} {'Команда':<30} {'Игры':<10}%\n", f"{"-" * 33}"]
+    results = [f"{' ':<5} {'Команда':<30} {'Игры':<10}%\n", f"{'-' * 33}"]
     for team in standings:
         position = team["data"]["position"]
         name = team["club"]["abbreviatedName"]
@@ -194,7 +194,7 @@ async def standings_nba(callback: CallbackQuery):
 
     async def format_table(teams, conference_name):
         sorted_teams = sorted(teams, key=lambda x: x["ConferenceRank"])
-        results = [f"<b>{conference_name}</b>\n", f"{' ':<5} {'Команда':<30} {'Игры':<10}%\n", f"{"-" * 33}"]
+        results = [f"<b>{conference_name}</b>\n", f"{' ':<5} {'Команда':<30} {'Игры':<10}%\n", f"{'-' * 33}"]
 
         for team in sorted_teams:
             position = team["ConferenceRank"]
@@ -230,9 +230,9 @@ async def past_nba_games(callback: CallbackQuery):
             gameday = datetime.strptime(game["Day"], "%Y-%m-%dT%H:%M:%S")
 
             if (datetime.today() - timedelta(weeks=1)) < gameday < datetime.today():
-                results.append(f"{game["Day"][:10]} | <b>{sports.NBA_teams[game["HomeTeam"]].value}</b> - "
-                               f"<b>{sports.NBA_teams[game["AwayTeam"]].value:<15}</b> "
-                               f"{game["HomeTeamScore"]}:{game["AwayTeamScore"]}")
+                results.append(f"{game['Day'][:10]} | <b>{sports.NBA_teams[game['HomeTeam']].value}</b> - "
+                               f"<b>{sports.NBA_teams[game['AwayTeam']].value:<15}</b> "
+                               f"{game['HomeTeamScore']}:{game['AwayTeamScore']}")
 
         message = "\n".join(results)
         await callback.message.answer(message, reply_markup=await kb.nba())
@@ -258,9 +258,9 @@ async def future_nba_games(callback: CallbackQuery):
             moscow_time = utc_time.astimezone(MOSCOW_TZ).strftime("%H:%M")
 
             if datetime.today() <= gameday < (datetime.today() + timedelta(weeks=1)):
-                results.append(f"{game["Day"][:10]} {moscow_time} | "
-                               f"<b>{sports.NBA_teams[game["HomeTeam"]].value:<15}</b> - "
-                               f"<b>{sports.NBA_teams[game["AwayTeam"]].value:>15}</b>")
+                results.append(f"{game['Day'][:10]} {moscow_time} | "
+                               f"<b>{sports.NBA_teams[game['HomeTeam']].value:<15}</b> - "
+                               f"<b>{sports.NBA_teams[game['AwayTeam']].value:>15}</b>")
 
         message = f"Предстоящие матчи (время Мск):\n\n" + "\n\n".join(results)
         await callback.message.answer(message, reply_markup=await kb.nba())

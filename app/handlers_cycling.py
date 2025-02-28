@@ -43,7 +43,7 @@ async def classics(callback: CallbackQuery):
                              location=data[0]["location"][0]["name"],
                              location_code=data[0]["location"][0]["code"])
 
-        output = (f"{race.dateFrom.strftime("%Y-%m-%d")} | <b>{race.name.split("-", 1)[-1].strip()}</b> "
+        output = (f"{race.dateFrom.strftime('%Y-%m-%d')} | <b>{race.name.split('-', 1)[-1].strip()}</b> "
                   f"{sports.Countries[race.location_code.upper()].value}\n")
 
         if datetime.today() > race.dateTo:
@@ -71,7 +71,7 @@ async def gt(callback: CallbackQuery):
                              location=data[0]["location"][0]["name"],
                              location_code=data[0]["location"][0]["code"])
 
-        output = (f"{race.dateFrom.strftime("%Y-%m-%d")} - {race.dateTo.strftime("%Y-%m-%d")} | "
+        output = (f"{race.dateFrom.strftime('%Y-%m-%d')} - {race.dateTo.strftime('%Y-%m-%d')} | "
                   f"<b>{race.name[5:]}</b> "
                   f"{sports.Countries[race.location_code.upper()].value}\n")
 
@@ -98,7 +98,7 @@ async def cycling_wc(callback: CallbackQuery):
                                 location=data[0]["location"][0]["name"],
                                 location_code=data[0]["location"][0]["code"])
 
-    output = (f"{race.dateFrom.strftime("%Y-%m-%d")} - {race.dateTo.strftime("%Y-%m-%d")} | "
+    output = (f"{race.dateFrom.strftime('%Y-%m-%d')} - {race.dateTo.strftime('%Y-%m-%d')} | "
               f"<b>{race.name[5:]}</b> "
               f"{sports.Countries[race.location_code.upper()].value}\n")
 
