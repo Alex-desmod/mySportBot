@@ -72,7 +72,6 @@ async def forward_feedback(message: Message, bot: Bot, state: FSMContext):
     admins = await rq.get_admins()
 
     for admin in admins:
-        logger.info(admin.tg_id)
         await bot.send_message(
             admin.tg_id,
             f"📩 Новое сообщение от @{message.from_user.username or message.from_user.id}:\n\n{message.text}"

@@ -16,7 +16,7 @@ async def get_admins():
         return result.scalars().all()
 
 
-async def get_cycling(eventId, name, dateFrom, dateTo, url, location, location_code):
+async def set_cycling(eventId, name, dateFrom, dateTo, url, location, location_code):
     async with async_session() as session:
         race = await session.scalar(select(Cycling).where(Cycling.eventId == eventId))
         if not race:
@@ -29,6 +29,12 @@ async def get_cycling(eventId, name, dateFrom, dateTo, url, location, location_c
                                 location_code=location_code))
             await session.commit()
         return await session.scalar(select(Cycling).where(Cycling.eventId == eventId))
+
+
+async def get_cycling(eventId):
+    async with async_session() as session:
+        race = await session.scalar(select(Cycling).where(Cycling.eventId == eventId))
+        return race
 
 
 async def get_athletics(eventId, name, dateFrom, dateTo, url, location, location_name, location_code):

@@ -24,6 +24,7 @@ async def fetch_data(url: str):
 
     async with aiohttp.ClientSession() as session:
         async with session.get(url, headers=headers) as response:
+            logger.info(response.status)
             if response.status == 200:
                 return await response.json()
             else:
