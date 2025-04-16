@@ -256,9 +256,10 @@ async def future_nba_games(callback: CallbackQuery):
             gameday = datetime.strptime(game["Day"], "%Y-%m-%dT%H:%M:%S")
             utc_time = datetime.strptime(game["DateTimeUTC"], "%Y-%m-%dT%H:%M:%S").replace(tzinfo=timezone.utc)
             moscow_time = utc_time.astimezone(MOSCOW_TZ).strftime("%H:%M")
+            moscow_date = utc_time.astimezone(MOSCOW_TZ).strftime("%Y-%m-%d")
 
             if datetime.today() <= gameday < (datetime.today() + timedelta(weeks=1)):
-                results.append(f"{game['Day'][:10]} {moscow_time} | "
+                results.append(f"{moscow_date} {moscow_time} | "
                                f"<b>{sports.NBA_teams[game['HomeTeam']].value:<15}</b> - "
                                f"<b>{sports.NBA_teams[game['AwayTeam']].value:>15}</b>")
 
