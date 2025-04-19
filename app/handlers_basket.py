@@ -227,9 +227,11 @@ async def past_nba_games(callback: CallbackQuery):
 
         results = []
         for game in games:
-            gameday = datetime.strptime(game["Day"], "%Y-%m-%dT%H:%M:%S")
+            gameday = datetime.strptime(game['Day'], "%Y-%m-%dT%H:%M:%S")
+            # utc_time = datetime.strptime(game['DateTimeUTC'], "%Y-%m-%dT%H:%M:%S")
+            # moscow_date = utc_time.astimezone(MOSCOW_TZ).strftime("%Y-%m-%d")
 
-            if (datetime.today() - timedelta(weeks=1)) < gameday < datetime.today():
+            if game['IsClosed'] and gameday >= (datetime.today() - timedelta(weeks=1)):
                 results.append(f"{game['Day'][:10]} | <b>{sports.NBA_teams[game['HomeTeam']].value}</b> - "
                                f"<b>{sports.NBA_teams[game['AwayTeam']].value:<15}</b> "
                                f"{game['HomeTeamScore']}:{game['AwayTeamScore']}")
@@ -254,11 +256,16 @@ async def future_nba_games(callback: CallbackQuery):
         results = []
         for game in games:
             gameday = datetime.strptime(game["Day"], "%Y-%m-%dT%H:%M:%S")
-            utc_time = datetime.strptime(game["DateTimeUTC"], "%Y-%m-%dT%H:%M:%S").replace(tzinfo=timezone.utc)
-            moscow_time = utc_time.astimezone(MOSCOW_TZ).strftime("%H:%M")
-            moscow_date = utc_time.astimezone(MOSCOW_TZ).strftime("%Y-%m-%d")
 
-            if datetime.today() <= gameday < (datetime.today() + timedelta(weeks=1)):
+            if game["DateTimeUTC"]:
+                utc_time = datetime.strptime(game["DateTimeUTC"], "%Y-%m-%dT%H:%M:%S").replace(tzinfo=timezone.utc)
+                moscow_time = utc_time.astimezone(MOSCOW_TZ).strftime("%H:%M")
+                moscow_date = utc_time.astimezone(MOSCOW_TZ).strftime("%Y-%m-%d")
+            else:
+                moscow_date = game['Day'][:10]
+                moscow_time = game['Day'][11:]
+
+            if not game['IsClosed'] and gameday <= (datetime.today() + timedelta(weeks=1)):
                 results.append(f"{moscow_date} {moscow_time} | "
                                f"<b>{sports.NBA_teams[game['HomeTeam']].value:<15}</b> - "
                                f"<b>{sports.NBA_teams[game['AwayTeam']].value:>15}</b>")
