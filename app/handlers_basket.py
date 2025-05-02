@@ -231,7 +231,7 @@ async def past_nba_games(callback: CallbackQuery):
             # utc_time = datetime.strptime(game['DateTimeUTC'], "%Y-%m-%dT%H:%M:%S")
             # moscow_date = utc_time.astimezone(MOSCOW_TZ).strftime("%Y-%m-%d")
 
-            if game['IsClosed'] and gameday >= (datetime.today() - timedelta(weeks=1)):
+            if game['Status'] == 'Final' and gameday >= (datetime.today() - timedelta(weeks=1)):
                 results.append(f"{game['Day'][:10]} | <b>{sports.NBA_teams[game['HomeTeam']].value}</b> - "
                                f"<b>{sports.NBA_teams[game['AwayTeam']].value:<15}</b> "
                                f"{game['HomeTeamScore']}:{game['AwayTeamScore']}")
@@ -265,7 +265,7 @@ async def future_nba_games(callback: CallbackQuery):
                 moscow_date = game['Day'][:10]
                 moscow_time = game['Day'][11:]
 
-            if not game['IsClosed'] and gameday <= (datetime.today() + timedelta(weeks=1)):
+            if game['Status'] == 'Scheduled' and gameday <= (datetime.today() + timedelta(weeks=1)):
                 results.append(f"{moscow_date} {moscow_time} | "
                                f"<b>{sports.NBA_teams[game['HomeTeam']].value:<15}</b> - "
                                f"<b>{sports.NBA_teams[game['AwayTeam']].value:>15}</b>")
