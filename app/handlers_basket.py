@@ -38,7 +38,7 @@ async def nba(callback: CallbackQuery):
                                   reply_markup=await kb.nba())
 
 
-if datetime.now() < datetime(current_year, 10, 1):
+if datetime.now() < datetime(current_year, 9, 1):
     #for Euroleague urls
     seasonCode = f'E{current_year - 1}'
     #for NBA urls
@@ -157,7 +157,7 @@ async def standings_euro(callback: CallbackQuery):
     else:
         roundNumber = 34
 
-    url_standings = bdata.Euro_endpoints().standings(roundNumber)
+    url_standings = bdata.Euro_endpoints().standings(roundNumber=roundNumber, seasonCode=seasonCode)
 
     sdata = await bdata.fetch_data(url_standings)
 
